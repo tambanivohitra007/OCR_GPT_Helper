@@ -37,11 +37,10 @@
             // 
             messageLbl.Dock = DockStyle.Fill;
             messageLbl.Font = new Font("Segoe UI", 16F);
-            messageLbl.Location = new Point(0, 92);
+            messageLbl.Location = new Point(0, 70);
             messageLbl.Name = "messageLbl";
-            messageLbl.Size = new Size(906, 246);
-            messageLbl.TabIndex = 1;
-            messageLbl.Text = "Answer AI";
+            messageLbl.Size = new Size(906, 268);
+            messageLbl.TabIndex = 0;
             messageLbl.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
@@ -49,11 +48,10 @@
             pictureBox1.Dock = DockStyle.Top;
             pictureBox1.Image = Properties.Resources.answer_ai;
             pictureBox1.Location = new Point(0, 20);
-            pictureBox1.Margin = new Padding(3, 20, 3, 3);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(906, 72);
+            pictureBox1.Size = new Size(906, 50);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 2;
+            pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
             // Answer
@@ -65,20 +63,16 @@
             Controls.Add(messageLbl);
             Controls.Add(pictureBox1);
             FormBorderStyle = FormBorderStyle.None;
-            MaximizeBox = false;
-            MinimizeBox = false;
             Name = "Answer";
             Opacity = 0.9D;
             Padding = new Padding(0, 20, 0, 0);
-            ShowIcon = false;
-            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-        private Label messageLbl;
-        private PictureBox pictureBox1;
+        private System.Windows.Forms.Label messageLbl;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

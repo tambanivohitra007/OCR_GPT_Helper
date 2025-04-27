@@ -297,15 +297,8 @@ namespace OCR_Capture
         /// </summary>
         private void OnExit(object sender, EventArgs e)
         {
-            // Hide and dispose the tray icon
-            if (trayIcon != null)
-            {
-                trayIcon.Visible = false;
-                trayIcon.Dispose();
-            }
-            // Unregister the global hotkey
+            trayIcon?.Dispose();
             UnregisterHotkey();
-            // Exit the application message loop
             Application.Exit();
         }
 
@@ -338,24 +331,17 @@ namespace OCR_Capture
         /// <param name="gptResponse">The text response from GPT or an error message.</param>
         private void DisplayGptResponse(string gptResponse)
         {
-            // Create a new form for the response display
-            using (Answer responseForm = new Answer())
+            using (var responseForm = new Answer { AnswerText = gptResponse, TopMost = true })
             {
-                responseForm.AnswerText = gptResponse; // Pass the GPT response to the Answer form
-                responseForm.TopMost = true; // Ensure it's on top
-                responseForm.Activate(); // Attempt to activate the form
-
-                // Use a Timer to close the form after 3 seconds
-                System.Windows.Forms.Timer closeTimer = new System.Windows.Forms.Timer();
-                closeTimer.Interval = 3000; // 3 seconds in milliseconds
+                var closeTimer = new System.Windows.Forms.Timer { Interval = 3000 };
                 closeTimer.Tick += (s, e) =>
                 {
-                    closeTimer.Stop(); // Stop the timer
-                    responseForm.Close(); // Close the form
+                    closeTimer.Stop();
+                    responseForm.Close();
                 };
                 closeTimer.Start();
 
-                responseForm.ShowDialog(); // Show the form as a modal dialog
+                responseForm.ShowDialog();
             }
         }
     }

@@ -45,6 +45,8 @@
             Text = "Select ";
             TopMost = true;
             WindowState = FormWindowState.Maximized;
+            DoubleBuffered = true; // Enable double buffering for smoother rendering
+            KeyPreview = true; // Allow key events to be captured
             Paint += SelectionForm_Paint;
             KeyDown += SelectionForm_KeyDown;
             MouseDown += SelectionForm_MouseDown;

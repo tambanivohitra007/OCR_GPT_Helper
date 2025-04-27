@@ -133,24 +133,22 @@ namespace OCR_Capture
         }
 
         /// <summary>
-        /// Handles the Paint event to draw the selection rectangle on the form.
+        /// Optimized Paint method for better resource usage and rendering
         /// </summary>
         private void SelectionForm_Paint(object sender, PaintEventArgs e)
         {
-            // Only draw if currently selecting and a rectangle has been defined
             if (isSelecting && !selectedRectangle.IsEmpty)
             {
                 // Fill the selected area with a semi-transparent color
-                using (Brush brush = new SolidBrush(Color.FromArgb(100, Color.Blue))) // Semi-transparent blue
+                using (var brush = new SolidBrush(Color.FromArgb(100, Color.Blue)))
                 {
-                    e.Graphics.FillRectangle(brush, selectedRectangle); // Fill the rectangle
+                    e.Graphics.FillRectangle(brush, selectedRectangle);
                 }
 
                 // Draw a dashed red border around the selected area
-                using (Pen pen = new Pen(Color.Red, 2))
+                using (var pen = new Pen(Color.Red, 2) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash })
                 {
-                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash; // Make the line dashed
-                    e.Graphics.DrawRectangle(pen, selectedRectangle); // Draw the rectangle border
+                    e.Graphics.DrawRectangle(pen, selectedRectangle);
                 }
             }
         }

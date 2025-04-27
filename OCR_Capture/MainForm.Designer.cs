@@ -28,7 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            imageList = new ImageList(components);
             SuspendLayout();
+            // 
+            // imageList
+            // 
+            imageList.ColorDepth = ColorDepth.Depth32Bit;
+            imageList.ImageStream = (ImageListStreamer)resources.GetObject("imageList.ImageStream");
+            imageList.TransparentColor = Color.Transparent;
+            imageList.Images.SetKeyName(0, "ai.ico");
+            imageList.Images.SetKeyName(1, "info.ico");
+            imageList.Images.SetKeyName(2, "remove.ico");
             // 
             // MainForm
             // 
@@ -43,5 +55,7 @@
         }
 
         #endregion
+
+        private ImageList imageList;
     }
 }

@@ -91,8 +91,8 @@ namespace OCR_Capture
             trayMenu = new ContextMenuStrip();
 
             // Add an "Exit" menu item
-            trayMenu.Items.Add("Information", null, OnInformationClick);
-            trayMenu.Items.Add("Exit Answer AI", null, OnExit);
+            trayMenu.Items.Add("Information", imageList.Images[1], OnInformationClick);
+            trayMenu.Items.Add("Exit Answer AI", imageList.Images[2], OnExit);
 
             // Create the NotifyIcon instance
             trayIcon = new NotifyIcon();
@@ -287,7 +287,7 @@ namespace OCR_Capture
         /// Handles the "Exit" menu item click from the system tray icon.
         /// Cleans up resources and exits the application.
         /// </summary>
-        private void OnExit(object sender, EventArgs e)
+        private void OnExit(object? sender, EventArgs e)
         {
             trayIcon?.Dispose();
             UnregisterHotkey();

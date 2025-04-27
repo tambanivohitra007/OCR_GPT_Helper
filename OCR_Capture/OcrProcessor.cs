@@ -1,4 +1,9 @@
-﻿using Windows.Graphics.Imaging; // Requires targeting Windows SDK
+﻿// Application: OCR GPT Helper
+// Version: 1.0.0
+// Developer: Rindra Razafinjatovo
+// Occupation: IT Administration/Instructor
+
+using Windows.Graphics.Imaging; // Requires targeting Windows SDK
 // Ensure no references to Tesseract remain and confirm Windows.Media.Ocr is used
 // No changes needed as the file already uses Windows.Media.Ocr
 using Windows.Media.Ocr;       // Requires targeting Windows SDK

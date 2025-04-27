@@ -1,4 +1,9 @@
-﻿namespace OCR_Capture
+﻿// Application: OCR GPT Helper
+// Version: 1.0.0
+// Developer: Rindra Razafinjatovo
+// Occupation: IT Administration/Instructor
+
+namespace OCR_Capture
 {
     partial class SelectionForm
     {

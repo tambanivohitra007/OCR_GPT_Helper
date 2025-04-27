@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿// Application: OCR GPT Helper
+// Version: 1.0.0
+// Developer: Rindra Razafinjatovo
+// Occupation: IT Administration/Instructor
+
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;

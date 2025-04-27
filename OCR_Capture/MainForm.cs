@@ -24,7 +24,6 @@ namespace OCR_Capture
         // Configuration settings
         private IConfiguration _configuration;
         private string _openAIApiKey;
-        private string _tessdataPath; // Path to the directory *containing* the 'tessdata' folder
 
         public MainForm()
         {
@@ -61,8 +60,6 @@ namespace OCR_Capture
 
                 // Read the OpenAI API key from configuration
                 _openAIApiKey = _configuration["OpenAI:ApiKey"];
-                // Read the Tesseract data path from configuration
-                _tessdataPath = _configuration["Tesseract:TessdataPath"]; // Path to the directory *containing* tessdata
 
                 // Provide feedback if essential configurations are missing
                 if (string.IsNullOrWhiteSpace(_openAIApiKey))
@@ -70,28 +67,6 @@ namespace OCR_Capture
                     MessageBox.Show("OpenAI API Key is not configured in appsettings.json. Please add it to enable GPT functionality.", "Configuration Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     // The application will still run, but GPT features will be disabled.
                 }
-
-                if (string.IsNullOrWhiteSpace(_tessdataPath))
-                {
-                    // If Tesseract path is not specified in config, default to a common location
-                    // relative to the executable (assuming tessdata is copied there).
-                    _tessdataPath = Path.Combine(Application.StartupPath, "tessdata");
-                    // We will check if this path exists later during OCR processing.
-                }
-                else
-                {
-                    // If a path is specified, ensure it's treated as the directory *containing* tessdata.
-                    // The TesseractEngine constructor expects the parent directory path.
-                    // If the user provided the full path to tessdata, we need to get the parent directory.
-                    // A simple check: if the path ends with "tessdata", use its parent.
-                    if (_tessdataPath.EndsWith("tessdata", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _tessdataPath = Path.GetDirectoryName(_tessdataPath);
-                    }
-                    // Note: This simple check might not cover all user input variations.
-                    // More robust path handling might be needed in a production app.
-                }
-
             }
             catch (Exception ex)
             {
@@ -111,6 +86,7 @@ namespace OCR_Capture
             trayMenu = new ContextMenuStrip();
 
             // Add an "Exit" menu item
+            trayMenu.Items.Add("Information", null, OnInformationClick);
             trayMenu.Items.Add("Exit Answer AI", null, OnExit);
 
             // Create the NotifyIcon instance
@@ -138,6 +114,17 @@ namespace OCR_Capture
 
             // Make the tray icon visible
             trayIcon.Visible = true;
+        }
+
+        private void OnInformationClick(object? sender, EventArgs e)
+        {
+            string developerInfo = "Application: OCR GPT Helper\n" +
+                                   "Version: 1.0.0\n" +
+                                   "Developer: Rindra Razafinjatovo\n" +
+                                   "Contact: rindra.it@gmail.com\n" +
+                                   "Description: This application captures screen content, performs OCR, and uses GPT to process the extracted text.";
+
+            MessageBox.Show(developerInfo, "About the Developer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 

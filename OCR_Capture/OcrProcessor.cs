@@ -1,4 +1,6 @@
 ﻿using Windows.Graphics.Imaging; // Requires targeting Windows SDK
+// Ensure no references to Tesseract remain and confirm Windows.Media.Ocr is used
+// No changes needed as the file already uses Windows.Media.Ocr
 using Windows.Media.Ocr;       // Requires targeting Windows SDK
 using Windows.Storage.Streams; // Requires targeting Windows SDK
 using System.Runtime.InteropServices;

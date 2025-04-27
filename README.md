@@ -2,6 +2,18 @@
 
 A C# Windows Forms application that resides in the system tray, allowing users to capture a screen area, perform OCR on the captured image, and send the extracted text to OpenAI's GPT API for an answer, primarily aimed at solving multiple-choice questions.
 
+---
+
+**⚠️ Important Educational Notice ⚠️**
+
+This project is developed strictly for **educational purposes** to demonstrate the integration of Windows system features (hotkeys, screen capture, Windows OCR) with external APIs (OpenAI GPT). It is intended as a learning resource for C# .NET development and API interaction.
+
+**This tool should NOT be used for academic dishonesty, cheating on online quizzes, exams, or any other form of unauthorized assistance.** Using this tool in such a manner violates academic integrity policies and ethical guidelines. The developer is not responsible for any misuse of this software.
+
+Please use this project responsibly and ethically.
+
+---
+
 ## Features
 
 * **System Tray Application:** Runs minimized in the background, accessible from the Windows system tray.
@@ -107,6 +119,7 @@ A C# Windows Forms application that resides in the system tray, allowing users t
 * **Capture Errors:** If the screen capture fails, a message will be shown.
 
 * **OCR Errors:** If no text is detected in the selected area or if there's an issue with the Windows OCR engine/language packs, an informative message is displayed.
+
 
 ## Potential Enhancements
 

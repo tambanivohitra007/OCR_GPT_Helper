@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /OCR_Capture/appsettings.json
+/OCR_Capture/appsettings.json

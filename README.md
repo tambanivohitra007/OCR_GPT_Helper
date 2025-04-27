@@ -108,8 +108,6 @@ A C# Windows Forms application that resides in the system tray, allowing users t
 
 * **OCR Errors:** If no text is detected in the selected area or if there's an issue with the Windows OCR engine/language packs, an informative message is displayed.
 
-* **OpenAI API Errors:** Specific `OpenAI.APIException` details (message, status code, raw response) are displayed if the API call fails. General exceptions during the API call process are also caught and reported.
-
 ## Potential Enhancements
 
 * Add a settings dialog accessible from the tray icon to configure the API key and other options.

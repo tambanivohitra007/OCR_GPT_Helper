@@ -25,7 +25,10 @@ namespace OCR_Capture
 
         private NotifyIcon trayIcon; // The system tray icon
         private ContextMenuStrip trayMenu; // The context menu for the tray icon
-            
+
+        // Add this field to keep track of the open Answer form
+        private Answer _answerForm;
+
         // Configuration settings
         private IConfiguration _configuration;
         private string _openAIApiKey;
@@ -194,83 +197,98 @@ namespace OCR_Capture
                 return;
             }
 
-            // Create and show the SelectionForm. Use 'using' for automatic disposal.
             using (var selectionForm = new SelectionForm())
             {
-                // Show the selection form modally and wait for the user to select an area or cancel.
                 DialogResult result = selectionForm.ShowDialog();
 
-                // Proceed only if the user selected an area (DialogResult.OK) and the rectangle is valid
-                if (result == DialogResult.OK && !selectionForm.SelectedRectangle.IsEmpty)
+                if (result == DialogResult.OK
+                    && !selectionForm.SelectedRectangle.IsEmpty
+                    && !string.IsNullOrEmpty(selectionForm.SelectedAction))
                 {
-                    // Capture the selected area of the screen
                     using (Bitmap screenshot = selectionForm.CaptureScreen(selectionForm.SelectedRectangle))
                     {
-                        // Check if the screenshot capture was successful
                         if (screenshot == null)
                         {
                             MessageBox.Show("Failed to capture screenshot. The selected area might be invalid.", "Capture Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return; // Stop processing if capture failed
+                            return;
                         }
 
-                        string extractedText = null; // Variable to hold the text from OCR
-                        string gptResponse = null;    // Variable to hold the response from GPT
+                        string extractedText = null;
+                        string gptResponse = null;
 
                         try
                         {
                             // --- Perform OCR ---
-                            // Use Task.Run to execute the CPU-bound OCR process on a background thread
-                            // This prevents the UI from freezing.
                             extractedText = await Task.Run(() =>
                             {
-                                // Create and use the OcrProcessor within the background task.
-                                // Use 'using' for proper disposal of the Tesseract engine.
                                 using (var ocrProcessor = new OcrProcessor())
                                 {
                                     return ocrProcessor.RecognizeAsync(screenshot);
                                 }
                             });
 
-                            // Check if any text was extracted by OCR
                             if (string.IsNullOrWhiteSpace(extractedText))
                             {
                                 MessageBox.Show("No text was detected in the selected area.", "OCR Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return; // Stop processing if no text was found
+                                return;
                             }
 
                             // --- Perform GPT Query ---
-                            // Only proceed with the GPT query if an API key is configured
                             if (!string.IsNullOrWhiteSpace(_openAIApiKey))
                             {
-                                // Use Task.Run for the I/O-bound API call as well, although HttpClient handles async.
-                                // This ensures the entire block is off the UI thread.
-                                gptResponse = await Task.Run(async () =>
+                                // Show loading indicator while waiting for OpenAI API
+                                using (var loadingForm = new Form
                                 {
-                                    // Create and use the OpenAIManager within the background task.
-                                    using (var openAIManager = new OpenAIManager(_openAIApiKey))
+                                    FormBorderStyle = FormBorderStyle.None,
+                                    StartPosition = FormStartPosition.CenterScreen,
+                                    Size = new Size(250, 80),
+                                    TopMost = true,
+                                    BackColor = Color.WhiteSmoke
+                                })
+                                {
+                                    var label = new Label
                                     {
-                                        // Call the async method to ask the question
-                                        return await openAIManager.AskQuestionAsync(extractedText);
-                                    }
-                                });
+                                        Text = "Waiting for AI response...",
+                                        Dock = DockStyle.Fill,
+                                        TextAlign = ContentAlignment.MiddleCenter,
+                                        Font = new Font("Segoe UI", 12F)
+                                    };
+                                    loadingForm.Controls.Add(label);
+                                    loadingForm.Show();
+                                    loadingForm.Refresh();
 
-                                // Display the GPT response in a message box
-                                //MessageBox.Show(gptResponse, "GPT Answer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    var actionEnum = selectionForm.SelectedAction.ToLower() switch
+                                    {
+                                        "answer" => OpenAIManager.OpenAIAssistAction.Answer,
+                                        "explain" => OpenAIManager.OpenAIAssistAction.Explain,
+                                        "translate" => OpenAIManager.OpenAIAssistAction.Translate,
+                                        "enhance" => OpenAIManager.OpenAIAssistAction.Enhance,
+                                        _ => OpenAIManager.OpenAIAssistAction.Answer
+                                    };
+
+                                    gptResponse = await Task.Run(async () =>
+                                    {
+                                        using (var openAIManager = new OpenAIManager(_openAIApiKey))
+                                        {
+                                            return await openAIManager.ProcessTextAsync(extractedText, actionEnum);
+                                        }
+                                    });
+
+                                    loadingForm.Close();
+                                }
+
                                 DisplayGptResponse(gptResponse);
                             }
                             else
                             {
-                                // If no API key is configured, just show the extracted text
                                 MessageBox.Show($"OCR Text:\n\n{extractedText}\n\nOpenAI API key is not configured, skipping GPT.", "OCR Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
 
                         }
                         catch (Exception ex)
                         {
-                            // Handle exceptions that occur during OCR or API call
                             MessageBox.Show($"An error occurred during processing:\n{ex.Message}", "Processing Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                            // Optionally show the extracted text even if the API call failed
                             if (!string.IsNullOrWhiteSpace(extractedText) && string.IsNullOrWhiteSpace(gptResponse))
                             {
                                 MessageBox.Show($"Extracted Text (API Failed):\n\n{extractedText}", "OCR Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -278,8 +296,6 @@ namespace OCR_Capture
                         }
                     }
                 }
-                // If DialogResult is Cancel, the user pressed ESC or didn't select a valid area.
-                // The 'using' statement will ensure the selectionForm is disposed.
             }
         }
 
@@ -289,6 +305,16 @@ namespace OCR_Capture
         /// </summary>
         private void OnExit(object? sender, EventArgs e)
         {
+            // Prevent ObjectDisposedException by detaching the context menu before disposing
+            if (trayIcon != null)
+                trayIcon.ContextMenuStrip = null;
+
+            if (trayMenu != null)
+            {
+                trayMenu.Dispose();
+                trayMenu = null;
+            }
+
             trayIcon?.Dispose();
             UnregisterHotkey();
             Application.Exit();
@@ -311,8 +337,14 @@ namespace OCR_Capture
             // Ensure resources are cleaned up when the form is closing (e.g., if Application.Exit() is called elsewhere)
             if (trayIcon != null)
             {
+                trayIcon.ContextMenuStrip = null; // Detach menu to avoid accessing disposed object
                 trayIcon.Visible = false;
                 trayIcon.Dispose();
+            }
+            if (trayMenu != null)
+            {
+                trayMenu.Dispose();
+                trayMenu = null;
             }
             UnregisterHotkey();
         }
@@ -323,17 +355,28 @@ namespace OCR_Capture
         /// <param name="gptResponse">The text response from GPT or an error message.</param>
         private void DisplayGptResponse(string gptResponse)
         {
-            using (var responseForm = new Answer { AnswerText = gptResponse, TopMost = true })
+            // If the answer form is already open and not disposed, update it
+            if (_answerForm != null && !_answerForm.IsDisposed && _answerForm.Visible)
             {
-                var closeTimer = new System.Windows.Forms.Timer { Interval = 3000 };
-                closeTimer.Tick += (s, e) =>
+                _answerForm.UpdateAnswerText(gptResponse);
+                _answerForm.BringToFront();
+                _answerForm.Activate();
+            }
+            else
+            {
+                // Dispose previous if needed
+                if (_answerForm != null)
                 {
-                    closeTimer.Stop();
-                    responseForm.Close();
-                };
-                closeTimer.Start();
+                    try { _answerForm.Close(); } catch { }
+                    _answerForm.Dispose();
+                    _answerForm = null;
+                }
 
-                responseForm.ShowDialog();
+                _answerForm = new Answer { AnswerText = gptResponse, TopMost = true };
+                // Set the side here if you want left or right (default is right)
+                _answerForm.Side = Answer.ScreenSide.Right; // or .Left
+                _answerForm.FormClosed += (s, e) => { _answerForm = null; };
+                _answerForm.Show();
             }
         }
     }

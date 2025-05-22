@@ -15,6 +15,7 @@ using System.Windows.Forms;
 
 namespace OCR_Capture
 {
+
     /// <summary>
     /// A transparent fullscreen form used to allow the user to select a screen area.
     /// Captures the selected area as a screenshot.
@@ -30,6 +31,7 @@ namespace OCR_Capture
         /// Gets the rectangle representing the area selected by the user.
         /// </summary>
         public Rectangle SelectedRectangle => selectedRectangle;
+        public string SelectedAction { get; private set; }
 
         public SelectionForm()
         {
@@ -37,7 +39,16 @@ namespace OCR_Capture
             
             DoubleBuffered = true; // Enable double buffering to reduce flicker
             KeyPreview = true; // Allow the form to capture key events before they reach controls
+
+            // --- Remove context menu creation and display from constructor ---
+            // The action menu should only be shown after a valid selection.
         }
+
+        // --- Remove the unused HandleAction method ---
+        // void HandleAction(string action)
+        // {
+        //     MessageBox.Show($"You selected: {action}");
+        // }
 
         /// <summary>
         /// Handles the MouseDown event to start the selection process.
@@ -80,7 +91,7 @@ namespace OCR_Capture
         /// <summary>
         /// Handles the MouseUp event to finalize the selection.
         /// </summary>
-        private void SelectionForm_MouseUp(object sender, MouseEventArgs e)
+        private async void SelectionForm_MouseUp(object sender, MouseEventArgs e)
         {
             // Finalize selection only on left mouse button release and if selecting was active
             if (e.Button == MouseButtons.Left && isSelecting)
@@ -88,7 +99,6 @@ namespace OCR_Capture
                 endPoint = e.Location; // Record the final mouse position
                 isSelecting = false;   // Clear the selecting flag
 
-                // *** ADD THIS LINE ***
                 this.Capture = false; // Release mouse capture
 
                 Opacity = 0.6;   // Return to near-full transparency
@@ -103,18 +113,72 @@ namespace OCR_Capture
                 // If a valid area (non-zero width and height) was selected
                 if (selectedRectangle.Width > 0 && selectedRectangle.Height > 0)
                 {
-                    DialogResult = DialogResult.OK; // Set DialogResult to OK to indicate success
-                    this.Hide(); // Hide the selection form
-                }
-                else
-                {
-                    // If no valid area was selected (e.g., just a click)
-                    selectedRectangle = Rectangle.Empty; // Clear the rectangle
-                    this.Invalidate(); // Clear the drawing
-                                       // Optionally, hide the form here if you want it to disappear on any click
-                                       // this.Hide();
+                    // Show the action menu and wait for the user's choice asynchronously
+                    var action = await ShowActionMenu();
+
+                    SelectedAction = action ?? string.Empty;
+
+                    // Optional: Debugging aid
+                    // MessageBox.Show($"SelectedAction: '{SelectedAction}'");
+
+                    // Only proceed if the user picked an action (not cancelled)
+                    if (!string.IsNullOrEmpty(SelectedAction))
+                    {
+                        DialogResult = DialogResult.OK;
+                        this.Hide();
+                    }
+                    else
+                    {
+                        // If cancelled, reset selection and let the user try again
+                        selectedRectangle = Rectangle.Empty;
+                        this.Invalidate();
+                    }
                 }
             }
+        }
+
+        private Task<string?> ShowActionMenu()
+        {
+            var tcs = new TaskCompletionSource<string?>();
+            var menu = new ContextMenuStrip();
+            bool itemClicked = false;
+
+            ToolStripItemClickedEventHandler? itemClickedHandler = null;
+            itemClickedHandler = (s, e) =>
+            {
+                itemClicked = true;
+                string? result = e.ClickedItem?.Text switch
+                {
+                    "Answer Question" => "answer",
+                    "Explain" => "explain",
+                    "Translate" => "translate",
+                    "Enhance" => "enhance",
+                    _ => null
+                };
+                // Do NOT call menu.Close() here; clicking an item will close the menu automatically.
+                tcs.TrySetResult(result);
+            };
+
+            menu.Items.Add("Answer Question");
+            menu.Items.Add("Explain");
+            menu.Items.Add("Translate");
+            menu.Items.Add("Enhance");
+            menu.ItemClicked += itemClickedHandler;
+
+            menu.Closed += (s, e) =>
+            {
+                // Only set null if no item was clicked (i.e., user dismissed the menu)
+                if (!itemClicked)
+                    tcs.TrySetResult(null);
+                if (itemClickedHandler != null)
+                    menu.ItemClicked -= itemClickedHandler;
+                // Only dispose if not already disposed
+                //if (!menu.IsDisposed)
+                //    menu.Dispose();
+            };
+
+            menu.Show(Cursor.Position);
+            return tcs.Task;
         }
 
         /// <summary>

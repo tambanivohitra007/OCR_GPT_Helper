@@ -19,20 +19,34 @@ namespace OCR_Capture
             // Move the text assignment to the OnLoad event
         }
 
+        public enum ScreenSide
+        {
+            Left,
+            Right
+        }
+
+        public ScreenSide Side { get; set; } = ScreenSide.Right; // Default to right side
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             messageLbl.Text = AnswerText; // Set the label text when the form loads
+
+            // Position the form on the chosen side of the primary screen
+            var workingArea = Screen.PrimaryScreen.WorkingArea;
+            int x = Side == ScreenSide.Right
+                ? workingArea.Right - this.Width
+                : workingArea.Left;
+            int y = workingArea.Top + (workingArea.Height - this.Height) / 2;
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(x, y);
         }
 
-        protected override CreateParams CreateParams
+        // Add this method to allow updating the answer text and resizing dynamically
+        public void UpdateAnswerText(string newText)
         {
-            get
-            {
-                var cp = base.CreateParams;
-                cp.ClassStyle |= 0x20000; // CS_DROPSHADOW: Adds a shadow to the form
-                return cp;
-            }
+            AnswerText = newText;
+            messageLbl.Text = newText;
         }
     }
 }

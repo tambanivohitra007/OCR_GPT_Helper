@@ -37,21 +37,21 @@ namespace OCR_Capture
             // 
             // SelectionForm
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(800, 450);
-            Cursor = Cursors.Default;
+            ClientSize = new Size(560, 270);
+            DoubleBuffered = true;
             ForeColor = Color.DarkGray;
             FormBorderStyle = FormBorderStyle.None;
+            KeyPreview = true;
+            Margin = new Padding(2, 2, 2, 2);
             Name = "SelectionForm";
             Opacity = 0.5D;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Select ";
             TopMost = true;
             WindowState = FormWindowState.Maximized;
-            DoubleBuffered = true; // Enable double buffering for smoother rendering
-            KeyPreview = true; // Allow key events to be captured
             Paint += SelectionForm_Paint;
             KeyDown += SelectionForm_KeyDown;
             MouseDown += SelectionForm_MouseDown;

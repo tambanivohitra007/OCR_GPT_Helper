@@ -33,51 +33,71 @@ namespace OCR_Capture
         /// </summary>
         private void InitializeComponent()
         {
-            messageLbl = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Answer));
             pictureBox1 = new PictureBox();
+            messageLbl = new RichTextBox();
+            panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel1.SuspendLayout();
             SuspendLayout();
-            // 
-            // messageLbl
-            // 
-            messageLbl.Dock = DockStyle.Fill;
-            messageLbl.Font = new Font("Segoe UI", 16F);
-            messageLbl.Location = new Point(0, 70);
-            messageLbl.Name = "messageLbl";
-            messageLbl.Size = new Size(906, 268);
-            messageLbl.TabIndex = 0;
-            messageLbl.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
             // 
             pictureBox1.Dock = DockStyle.Top;
             pictureBox1.Image = Properties.Resources.answer_ai;
-            pictureBox1.Location = new Point(0, 20);
+            pictureBox1.Location = new Point(0, 12);
+            pictureBox1.Margin = new Padding(2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(906, 50);
+            pictureBox1.Size = new Size(266, 30);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
+            // messageLbl
+            // 
+            messageLbl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            messageLbl.BorderStyle = BorderStyle.None;
+            messageLbl.Font = new Font("Segoe UI", 12F);
+            messageLbl.Location = new Point(20, 22);
+            messageLbl.Margin = new Padding(20);
+            messageLbl.Name = "messageLbl";
+            messageLbl.Size = new Size(226, 277);
+            messageLbl.TabIndex = 2;
+            messageLbl.Text = "";
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(messageLbl);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 42);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(266, 319);
+            panel1.TabIndex = 3;
+            // 
             // Answer
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.WhiteSmoke;
-            ClientSize = new Size(906, 338);
-            Controls.Add(messageLbl);
+            ClientSize = new Size(266, 361);
+            Controls.Add(panel1);
             Controls.Add(pictureBox1);
-            FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(2);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "Answer";
-            Opacity = 0.9D;
-            Padding = new Padding(0, 20, 0, 0);
+            Opacity = 0.95D;
+            Padding = new Padding(0, 12, 0, 0);
             StartPosition = FormStartPosition.CenterScreen;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
-        private System.Windows.Forms.Label messageLbl;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private RichTextBox messageLbl;
+        private Panel panel1;
     }
 }

@@ -126,13 +126,19 @@ namespace OCR_Capture
 
         private void OnInformationClick(object? sender, EventArgs e)
         {
-            string developerInfo = "Application: OCR GPT Helper\n" +
-                                   "Version: 1.0.0\n" +
-                                   "Developer: Rindra Razafinjatovo\n" +
-                                   "Contact: rindra.it@gmail.com\n" +
-                                   "Description: This application captures screen content, performs OCR, and uses GPT to process the extracted text.";
+            string helpInfo = "How to Use OCR GPT Helper:\n\n" +
+                              "1. Press F8 (the global hotkey) to start a screen capture.\n" +
+                              "2. Select the area of the screen you want to capture.\n" +
+                              "3. Choose one of the following actions:\n" +
+                              "   - Answer: Get a direct answer to the captured text (e.g., a question).\n" +
+                              "   - Explain: Get a detailed explanation of the captured text.\n" +
+                              "   - Translate: Translate the captured text to another language.\n" +
+                              "   - Enhance: Improve or rephrase the captured text.\n" +
+                              "4. The result will appear in a popup window on your screen.\n\n" +
+                              "You can access this help and other options by right-clicking the tray icon.\n" +
+                              "Make sure your OpenAI API key is configured in appsettings.json for full functionality.";
 
-            MessageBox.Show(developerInfo, "About the Developer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(helpInfo, "How to Use OCR GPT Helper", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 

@@ -1,6 +1,8 @@
-# OCR GPT Answer Tool
+# OCR GPT Helper
 
-A C# Windows Forms application that resides in the system tray, allowing users to capture a screen area, perform OCR on the captured image, and send the extracted text to OpenAI's GPT API for an answer, primarily aimed at solving multiple-choice questions.
+**Version:** 1.1.0
+
+OCR GPT Helper is a Windows application that allows you to capture a region of your screen, perform OCR, and use OpenAI GPT to answer, explain, translate, or enhance the captured text.
 
 ---
 
@@ -31,6 +33,13 @@ Please use this project responsibly and ethically.
 * **Configuration:** Uses `appsettings.json` for configurable settings like the OpenAI API key and Tesseract data path (though Tesseract is replaced by Windows OCR, the setting structure remains).
 
 * **Error Handling:** Includes basic error handling for capture failures, OCR issues, and API communication problems.
+
+## Usage
+
+1. Press F8 to start a capture.
+2. Select a region.
+3. Choose an action.
+4. View the result in a popup window.
 
 ## Requirements
 
@@ -120,7 +129,6 @@ Please use this project responsibly and ethically.
 
 * **OCR Errors:** If no text is detected in the selected area or if there's an issue with the Windows OCR engine/language packs, an informative message is displayed.
 
-
 ## Potential Enhancements
 
 * Add a settings dialog accessible from the tray icon to configure the API key and other options.
@@ -136,3 +144,7 @@ Please use this project responsibly and ethically.
 * Handle multi-monitor setups more explicitly if needed.
 
 * Add support for saving captured images or extracted text.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for details.

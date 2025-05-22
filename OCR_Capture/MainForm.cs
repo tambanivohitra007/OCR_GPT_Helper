@@ -1,5 +1,5 @@
 ﻿// Application: OCR GPT Helper
-// Version: 1.0.0
+// Version: 1.1.0
 // Developer: Rindra Razafinjatovo
 // Occupation: IT Administration/Instructor
 

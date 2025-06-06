@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCR_Capture", "OCR_Capture\OCR_Capture.csproj", "{568FCAE3-8C09-41F0-B163-5EBD249A4DB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOverlay", "TestOverlay\TestOverlay.csproj", "{3FF85563-EBC5-4B5A-8B1E-A75C08CB98BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{568FCAE3-8C09-41F0-B163-5EBD249A4DB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{568FCAE3-8C09-41F0-B163-5EBD249A4DB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{568FCAE3-8C09-41F0-B163-5EBD249A4DB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FF85563-EBC5-4B5A-8B1E-A75C08CB98BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FF85563-EBC5-4B5A-8B1E-A75C08CB98BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FF85563-EBC5-4B5A-8B1E-A75C08CB98BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FF85563-EBC5-4B5A-8B1E-A75C08CB98BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

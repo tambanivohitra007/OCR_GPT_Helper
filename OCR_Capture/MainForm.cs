@@ -32,6 +32,8 @@ namespace OCR_Capture
         // Configuration settings
         private IConfiguration _configuration;
         private string _openAIApiKey;
+        // Add a field for Gemini API key
+        private string _geminiApiKey;
 
         public MainForm()
         {
@@ -68,6 +70,8 @@ namespace OCR_Capture
 
                 // Read the OpenAI API key from configuration
                 _openAIApiKey = _configuration["OpenAI:ApiKey"];
+                // Add a field for Gemini API key
+                _geminiApiKey = _configuration["Gemini:ApiKey"];
 
                 // Provide feedback if essential configurations are missing
                 if (string.IsNullOrWhiteSpace(_openAIApiKey))
@@ -265,16 +269,17 @@ namespace OCR_Capture
 
                                     var actionEnum = selectionForm.SelectedAction.ToLower() switch
                                     {
-                                        "answer" => OpenAIManager.OpenAIAssistAction.Answer,
-                                        "explain" => OpenAIManager.OpenAIAssistAction.Explain,
-                                        "translate" => OpenAIManager.OpenAIAssistAction.Translate,
-                                        "enhance" => OpenAIManager.OpenAIAssistAction.Enhance,
-                                        _ => OpenAIManager.OpenAIAssistAction.Answer
+                                        "answer" => GeminiManager.GeminiAssistAction.Answer,
+                                        "explain" => GeminiManager.GeminiAssistAction.Explain,
+                                        "translate" => GeminiManager.GeminiAssistAction.Translate,
+                                        "enhance" => GeminiManager.GeminiAssistAction.Enhance,
+                                        "reply" => GeminiManager.GeminiAssistAction.Reply,
+                                        _ => GeminiManager.GeminiAssistAction.Answer
                                     };
 
                                     gptResponse = await Task.Run(async () =>
                                     {
-                                        using (var openAIManager = new OpenAIManager(_openAIApiKey))
+                                        using (var openAIManager = new GeminiManager(_openAIApiKey))
                                         {
                                             return await openAIManager.ProcessTextAsync(extractedText, actionEnum);
                                         }

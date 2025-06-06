@@ -153,6 +153,7 @@ namespace OCR_Capture
                     "Explain" => "explain",
                     "Translate" => "translate",
                     "Enhance" => "enhance",
+                    "Reply" => "reply",
                     _ => null
                 };
                 // Do NOT call menu.Close() here; clicking an item will close the menu automatically.
@@ -163,6 +164,7 @@ namespace OCR_Capture
             menu.Items.Add("Explain");
             menu.Items.Add("Translate");
             menu.Items.Add("Enhance");
+            menu.Items.Add("Reply");
             menu.ItemClicked += itemClickedHandler;
 
             menu.Closed += (s, e) =>
